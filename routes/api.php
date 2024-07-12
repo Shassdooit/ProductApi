@@ -17,10 +17,12 @@ Route::prefix('/v1')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::apiResource('users', UserController::class);
 
-    Route::get('/carts', [CartController::class, 'index']);
-    Route::post('/carts', [CartController::class, 'store']);
-    Route::put('/carts/{id}', [CartController::class, 'update']);
-    Route::delete('/carts/{id}', [CartController::class, 'destroy']);
+    Route::prefix('cart')->group(function () {
+        Route::get('/{userId}', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'store']);
+        Route::put('/{userId}/{cartItemId}', [CartController::class, 'update']);
+        Route::delete('/{userId}/{cartItemId}', [CartController::class, 'destroy']);
+    });
 });
 
 

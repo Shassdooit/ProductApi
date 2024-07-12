@@ -2,56 +2,56 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\DTO\Cart\StoreCartItemDTO;
-use App\DTO\Cart\UpdateCartItemDTO;
+
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCartItemRequest;
-use App\Http\Requests\UpdateCartItemRequest;
-use App\Services\CartService\CartService;
+use App\Http\Requests\Cart\StoreCartItemRequest;
+use App\Http\Requests\Cart\UpdateCartItemRequest;
+use App\Services\CartService\UseCases\AddItem;
+use App\Services\CartService\UseCases\GetAllItems;
+use App\Services\CartService\UseCases\RemoveItem;
+use App\Services\CartService\UseCases\UpdateItem;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+
 
 class CartController extends Controller
 {
-    public function __construct(private readonly CartService $cartService)
-    {
+    public function __construct(
+        protected GetAllItems $getAllItems,
+        protected AddItem $addItem,
+        protected UpdateItem $updateItem,
+        protected RemoveItem $removeItem,
+    ) {
     }
 
-    public function index(Request $request): JsonResponse
+    public function index($userId): JsonResponse
     {
-        $cartItems = $this->cartService->getAllItems($request->user()->id);
-        return response()->json($cartItems);
+        $items = $this->getAllItems->execute($userId);
+        return response()->json($items);
     }
 
     public function store(StoreCartItemRequest $request): JsonResponse
     {
-        $validatedRequest = $request->validated();
-        $storeCartItemDto = new StoreCartItemDto(
-            $validatedRequest['product_id'],
-            $validatedRequest['quantity'],
-        );
-
-        $this->cartService->addItem($request->user()->id, $storeCartItemDto);
-
-        return response()->json(status: 201);
+        $this->addItem->execute($request->validated());
+        return response()->json(['message' => 'Item added successfully']);
     }
 
-    public function update(UpdateCartItemRequest $request, $id): JsonResponse
+    public function update(UpdateCartItemRequest $request, $userId, $cartItemId): JsonResponse
     {
-        $validatedRequest = $request->validated();
-        $updateCartItemDto = new UpdateCartItemDto(
-            $validatedRequest['quantity'],
-        );
-
-        $this->cartService->updateItem($request->user()->id, $id, $updateCartItemDto);
-
-        return response()->json($updateCartItemDto);
+        $this->updateItem->execute($request->validated());
+        return response()->json(['message' => 'Item updated successfully']);
     }
 
-    public function destroy(Request $request, $id): JsonResponse
+    /**
+     * @throws Exception
+     */
+    public function destroy($userId, $cartItemId): JsonResponse
     {
-        $this->cartService->removeItem($request->user()->id, $id);
-
-        return response()->json(null, 204);
+        try {
+            $this->removeItem->execute($userId, $cartItemId);
+            return response()->json(['message' => 'Item removed successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 400);
+        }
     }
 }

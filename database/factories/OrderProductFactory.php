@@ -15,7 +15,7 @@ class OrderProductFactory extends Factory
         return [
             'order_id' => Order::all()->random()->id,
             'product_id' => Product::all()->random()->id,
-            'quantity' => $this->faker->numberBetween(1, 10),
+            'quantity' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

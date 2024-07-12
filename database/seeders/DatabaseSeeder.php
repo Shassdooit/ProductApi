@@ -20,17 +20,12 @@ class DatabaseSeeder extends Seeder
         Product::factory(10)
             ->create();
 
-        User::factory(100)
-            ->has(Order::factory()->count(1)->has(OrderProduct::factory(1)))
+        User::factory(10)
+            ->has(Order::factory()->count(1)
+                ->has(OrderProduct::factory(1)
+                )
+            )
             ->has(Cart::factory()->count(1))
             ->create();
-
     }
-
-
-    //создать 10 заказов, у каждого из которых будет 2 заказ-продукта
-    //
-    //создать 100 юзеров, у каждго из которых будет по 5 заказов
-
-
 }
