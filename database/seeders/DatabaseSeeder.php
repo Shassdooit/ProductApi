@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Cart;
+use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
@@ -21,11 +22,18 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         User::factory(10)
-            ->has(Order::factory()->count(1)
-                ->has(OrderProduct::factory(1)
-                )
+            ->has(
+                Order::factory()->count(1)
+                    ->has(
+                        OrderProduct::factory(1)
+                    )
             )
-            ->has(Cart::factory()->count(1))
+            ->has(
+                Cart::factory()->count(1)
+                    ->has(
+                        CartProduct::factory(1)
+                    )
+            )
             ->create();
     }
 }

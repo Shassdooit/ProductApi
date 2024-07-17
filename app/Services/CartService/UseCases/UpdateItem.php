@@ -9,7 +9,14 @@ class UpdateItem
 {
     public function execute(UpdateCartItemDTO $updateCartItemDTO): void
     {
-        $cartItem = Cart::where('user_id', $updateCartItemDTO->userId)->findOrFail($updateCartItemDTO->cartItemId);
-        $cartItem->update(['quantity' => $updateCartItemDTO->quantity]);
+        $cartItem = Cart::where([
+            'user_id' => $updateCartItemDTO->userId,
+            'product_id' => $updateCartItemDTO->productId,
+        ])->first();
+
+        if ($cartItem) {
+            $cartItem->quantity = $updateCartItemDTO->quantity;
+            $cartItem->save();
+        }
     }
 }

@@ -10,4 +10,5 @@ readonly class StoreCartItemDTO
         public int $quantity,
     ) {
     }
+
 }

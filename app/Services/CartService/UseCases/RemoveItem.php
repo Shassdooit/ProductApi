@@ -5,7 +5,6 @@ namespace App\Services\CartService\UseCases;
 use App\Models\Cart;
 use Exception;
 
-use Illuminate\Support\Facades\DB;
 
 class RemoveItem
 {
@@ -15,9 +14,8 @@ class RemoveItem
      */
     public function execute(int $userId, int $cartItemId): void
     {
-        $cartItem = DB::table('carts')
-            ->where('user_id', $userId)
-            ->where('id', $cartItemId)
+        $cartItem = Cart::where('user_id', $userId)
+            ->where('product_id', $cartItemId)
             ->first();
         if ($cartItem) {
             $cartItem->delete();

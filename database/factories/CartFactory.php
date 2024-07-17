@@ -15,8 +15,6 @@ class CartFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            'product_id' => Product::all()->random()->id,
-            'quantity' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

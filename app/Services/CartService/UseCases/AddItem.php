@@ -10,8 +10,13 @@ class AddItem
     public function execute(StoreCartItemDTO $storeCartItemDTO): void
     {
         Cart::updateOrCreate(
-            ['user_id' => $storeCartItemDTO->userId, 'product_id' => $storeCartItemDTO->productId],
-            ['quantity' => $storeCartItemDTO->quantity,]
+            [
+                'user_id' => $storeCartItemDTO->userId,
+                'product_id' => $storeCartItemDTO->productId
+            ],
+            [
+                'quantity' => $storeCartItemDTO->quantity,
+            ]
         );
     }
 }
