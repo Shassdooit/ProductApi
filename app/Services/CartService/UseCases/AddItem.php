@@ -3,13 +3,14 @@
 namespace App\Services\CartService\UseCases;
 
 use App\DTO\Cart\StoreCartItemDTO;
-use App\Models\Cart;
+use App\Models\CartProduct;
+
 
 class AddItem
 {
     public function execute(StoreCartItemDTO $storeCartItemDTO): void
     {
-        Cart::updateOrCreate(
+        CartProduct::updateOrCreate(
             [
                 'user_id' => $storeCartItemDTO->userId,
                 'product_id' => $storeCartItemDTO->productId

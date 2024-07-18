@@ -12,6 +12,7 @@ use App\Services\CartService\UseCases\AddItem;
 use App\Services\CartService\UseCases\GetAllItems;
 use App\Services\CartService\UseCases\RemoveItem;
 use App\Services\CartService\UseCases\UpdateItem;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 
@@ -62,6 +63,9 @@ class CartController extends Controller
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function destroy($userId, $cartItemId): JsonResponse
     {
         $this->removeItem->execute($userId, $cartItemId);

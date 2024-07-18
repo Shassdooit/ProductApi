@@ -17,7 +17,7 @@ Route::prefix('/v1')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::apiResource('users', UserController::class);
 
-    Route::prefix('cart')->group(function () {
+    Route::prefix('carts')->group(function () {
         Route::get('/{userId}', [CartController::class, 'index']);
         Route::post('/', [CartController::class, 'store']);
         Route::put('/{userId}/{cartItemId}', [CartController::class, 'update']);
