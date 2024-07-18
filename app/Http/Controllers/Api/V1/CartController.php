@@ -28,38 +28,50 @@ class CartController extends Controller
 
     public function index($userId): JsonResponse
     {
-        $items = $this->getAllItems->execute($userId);
-        return response()->json($items);
+        try {
+            $items = $this->getAllItems->execute($userId);
+            return response()->json($items);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function store(StoreCartItemRequest $request): JsonResponse
     {
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validated();
 
-        $dto = new StoreCartItemDto(
-            $validatedData['user_id'],
-            $validatedData['product_id'],
-            $validatedData['quantity']
-        );
+            $dto = new StoreCartItemDTO(
+                $validatedData['user_id'],
+                $validatedData['product_id'],
+                $validatedData['quantity']
+            );
 
-        $this->addItem->execute($dto);
+            $this->addItem->execute($dto);
 
-        return response()->json(['massage' => 'Item added successfully']);
+            return response()->json(['message' => 'Item added successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function update(UpdateCartItemRequest $request, int $userId, int $cartItemId): JsonResponse
     {
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validated();
 
-        $dto = new UpdateCartItemDTO(
-            $userId,
-            $cartItemId,
-            $validatedData['quantity']
-        );
+            $dto = new UpdateCartItemDTO(
+                $userId,
+                $cartItemId,
+                $validatedData['quantity']
+            );
 
-        $this->updateItem->execute($dto);
+            $this->updateItem->execute($dto);
 
-        return response()->json(['message' => 'Item updated successfully']);
+            return response()->json(['message' => 'Item updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 
@@ -68,7 +80,11 @@ class CartController extends Controller
      */
     public function destroy($userId, $cartItemId): JsonResponse
     {
-        $this->removeItem->execute($userId, $cartItemId);
-        return response()->json(['message' => 'Item removed successfully']);
+        try {
+            $this->removeItem->execute($userId, $cartItemId);
+            return response()->json(['message' => 'Item removed successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

@@ -2,8 +2,7 @@
 
 namespace App\Services\CartService\UseCases;
 
-
-use App\Models\CartProduct;
+use App\Models\Cart;
 use Exception;
 
 
@@ -15,11 +14,9 @@ class RemoveItem
      */
     public function execute(int $userId, int $cartItemId): void
     {
-        $cartItem = CartProduct::where('user_id', $userId)
-            ->where('product_id', $cartItemId)
-            ->first();
+        $cartItem = Cart::where('user_id', $userId)->first();
         if ($cartItem) {
-            $cartItem->delete();
+            $cartItem->products()->detach($cartItemId);
         } else {
             throw new Exception('Item not found', 404);
         }

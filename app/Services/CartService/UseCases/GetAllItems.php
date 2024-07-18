@@ -2,13 +2,12 @@
 
 namespace App\Services\CartService\UseCases;
 
-
-use App\Models\CartProduct;
+use App\Models\Cart;
 
 class GetAllItems
 {
     public function execute(int $userId)
     {
-        return CartProduct::where('user_id', $userId)->with('product')->get();
+        return Cart::where('user_id', $userId)->with('products')->first();
     }
 }

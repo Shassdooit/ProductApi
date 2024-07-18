@@ -3,21 +3,16 @@
 namespace App\Services\CartService\UseCases;
 
 use App\DTO\Cart\StoreCartItemDTO;
-use App\Models\CartProduct;
-
+use App\Models\Cart;
 
 class AddItem
 {
     public function execute(StoreCartItemDTO $storeCartItemDTO): void
     {
-        CartProduct::updateOrCreate(
-            [
-                'user_id' => $storeCartItemDTO->userId,
-                'product_id' => $storeCartItemDTO->productId
-            ],
-            [
-                'quantity' => $storeCartItemDTO->quantity,
-            ]
+        $cart = Cart::firstOrCreate(['user_id' => $storeCartItemDTO->userId]);
+        $cart->products()->updateOrCreate(
+            ['id' => $storeCartItemDTO->productId],
+            ['quantity' => $storeCartItemDTO->quantity]
         );
     }
 }
