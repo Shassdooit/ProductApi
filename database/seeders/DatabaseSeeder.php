@@ -18,10 +18,9 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        // Создаем 10 продуктов
         $products = Product::factory(10)->create();
 
-        // Создаем 10 пользователей
+
         User::factory(10)
             ->has(
                 Order::factory()->count(1)
@@ -34,7 +33,7 @@ class DatabaseSeeder extends Seeder
                     ->afterCreating(function (Cart $cart) use ($products) {
                         $product = $products->shift();
                         if ($product) {
-                            $cart->products()->attach($product->id, ['quantity' => 1]);
+                            $cart->products()->attach($product->id);
                         }
                     })
             )

@@ -12,13 +12,19 @@ class RemoveItem
     /**
      * @throws Exception
      */
-    public function execute(int $userId, int $cartItemId): void
+    public function execute(int $userId, int $productId): void
     {
-        $cartItem = Cart::where('user_id', $userId)->first();
-        if ($cartItem) {
-            $cartItem->products()->detach($cartItemId);
+        $cart = Cart::where('user_id', $userId)->first();
+
+
+        if ($cart) {
+            if ($cart->products()->where('product_id', $productId)->exists()) {
+                $cart->products()->detach($productId);
+            } else {
+                throw new Exception('Product not found in cart', 404);
+            }
         } else {
-            throw new Exception('Item not found', 404);
+            throw new Exception('Cart not found', 404);
         }
     }
 }

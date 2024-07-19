@@ -21,7 +21,7 @@ Route::prefix('/v1')->group(function () {
         Route::get('/{userId}', [CartController::class, 'index']);
         Route::post('/', [CartController::class, 'store']);
         Route::put('/{userId}/items/{cartItemId}', [CartController::class, 'update']);
-        Route::delete('/{userId}/items{cartItemId}', [CartController::class, 'destroy']);
+        Route::delete('/{userId}/items/{cartItemId}', [CartController::class, 'destroy']);
     });
 });
 

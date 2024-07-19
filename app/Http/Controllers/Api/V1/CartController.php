@@ -78,13 +78,13 @@ class CartController extends Controller
     /**
      * @throws Exception
      */
-    public function destroy($userId, $cartItemId): JsonResponse
+    public function destroy($userId, $productId): JsonResponse
     {
         try {
-            $this->removeItem->execute($userId, $cartItemId);
-            return response()->json(['message' => 'Item removed successfully']);
+            $this->removeItem->execute($userId, $productId);
+            return response()->json(['message' => 'Item removed successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
         }
     }
 }
