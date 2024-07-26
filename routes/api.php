@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
@@ -22,6 +23,13 @@ Route::prefix('/v1')->group(function () {
         Route::post('/', [CartController::class, 'store']);
         Route::put('/{userId}/items/{cartItemId}', [CartController::class, 'update']);
         Route::delete('/{userId}/items/{cartItemId}', [CartController::class, 'destroy']);
+    });
+
+    Route::prefix('auth')->middleware('api')->controller(AuthController::class)->group(function () {
+        Route::post('login', 'login');
+        Route::get('user', 'user');
+        Route::post('logout', 'logout');
+        Route::post('refresh', 'refresh');
     });
 });
 
