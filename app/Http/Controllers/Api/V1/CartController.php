@@ -8,6 +8,7 @@ use App\DTO\Cart\UpdateCartItemDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreCartItemRequest;
 use App\Http\Requests\Cart\UpdateCartItemRequest;
+use App\Http\Resources\CartResource;
 use App\Services\CartService\UseCases\AddItem;
 use App\Services\CartService\UseCases\GetAllItems;
 use App\Services\CartService\UseCases\RemoveItem;
@@ -30,7 +31,7 @@ class CartController extends Controller
     {
         try {
             $items = $this->getAllItems->execute($userId);
-            return response()->json($items);
+            return response()->json(new CartResource($items));
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
