@@ -2,6 +2,8 @@
 
 namespace App\Services\CartService\UseCases;
 
+use App\Exceptions\CartNotFoundException;
+use App\Exceptions\ProductNotFoundException;
 use App\Models\Cart;
 use Exception;
 
@@ -17,14 +19,14 @@ class RemoveItem
         $cart = Cart::where('user_id', $userId)->first();
 
 
-        if ($cart) {
+        if ($cart !== null) {
             if ($cart->products()->where('product_id', $productId)->exists()) {
                 $cart->products()->detach($productId);
             } else {
-                throw new Exception('Product not found in cart', 404);
+                throw new ProductNotFoundException();
             }
         } else {
-            throw new Exception('Cart not found', 404);
+            throw new CartNotFoundException();
         }
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\DTO\Cart\StoreCartItemDTO;
 use App\DTO\Cart\UpdateCartItemDTO;
+use App\Exceptions\CartNotFoundException;
+use App\Exceptions\ProductNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\StoreCartItemRequest;
 use App\Http\Requests\Cart\UpdateCartItemRequest;
@@ -32,30 +34,29 @@ class CartController extends Controller
         try {
             $items = $this->getAllItems->execute($userId);
             return response()->json(new CartResource($items));
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } catch (CartNotFoundException $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
         }
     }
 
     public function store(StoreCartItemRequest $request): JsonResponse
     {
-        try {
-            $validatedData = $request->validated();
+        $validatedData = $request->validated();
 
-            $dto = new StoreCartItemDTO(
-                $validatedData['user_id'],
-                $validatedData['product_id'],
-                $validatedData['quantity']
-            );
+        $dto = new StoreCartItemDTO(
+            $validatedData['user_id'],
+            $validatedData['product_id'],
+            $validatedData['quantity']
+        );
 
-            $this->addItem->execute($dto);
+        $this->addItem->execute($dto);
 
-            return response()->json(['message' => 'Item added successfully']);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json(['message' => 'Item added successfully']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(UpdateCartItemRequest $request, int $userId, int $cartItemId): JsonResponse
     {
         try {
@@ -70,8 +71,8 @@ class CartController extends Controller
             $this->updateItem->execute($dto);
 
             return response()->json(['message' => 'Item updated successfully']);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } catch (ProductNotFoundException|CartNotFoundException $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
         }
     }
 
@@ -84,8 +85,8 @@ class CartController extends Controller
         try {
             $this->removeItem->execute($userId, $productId);
             return response()->json(['message' => 'Item removed successfully'], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
+        } catch (CartNotFoundException|ProductNotFoundException $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
         }
     }
 }
