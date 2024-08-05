@@ -24,13 +24,6 @@ Route::prefix('/v1')->group(function () {
         Route::put('/{userId}/items/{cartItemId}', [CartController::class, 'update']);
         Route::delete('/{userId}/items/{cartItemId}', [CartController::class, 'destroy']);
     });
-
-    Route::prefix('auth')->middleware('api')->controller(AuthController::class)->group(function () {
-        Route::post('login', 'login');
-        Route::get('user', 'user');
-        Route::post('logout', 'logout');
-        Route::post('refresh', 'refresh');
-    });
 });
 
 

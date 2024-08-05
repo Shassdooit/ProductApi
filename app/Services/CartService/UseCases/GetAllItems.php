@@ -12,11 +12,9 @@ class GetAllItems
      */
     public function execute(int $userId)
     {
-        $cart = Cart::where('user_id', $userId)->with('products')->first();
-
-        if (!$cart) {
-            throw new CartNotFoundException();
-        }
-        return $cart;
+        return Cart::where('user_id', $userId)
+            ->with('products')
+            ->first()
+            ?? throw new CartNotFoundException();
     }
 }

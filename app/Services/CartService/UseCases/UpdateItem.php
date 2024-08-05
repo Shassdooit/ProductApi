@@ -15,17 +15,12 @@ class UpdateItem
      */
     public function execute(UpdateCartItemDTO $updateCartItemDTO): void
     {
-        $cart = Cart::where('user_id', $updateCartItemDTO->userId)->first();
+        $cart = Cart::where('user_id', $updateCartItemDTO->userId)
+            ->first() ?? throw new CartNotFoundException();
 
-        if (!$cart) {
-            throw new CartNotFoundException();
-        }
+        $cart->products()->where('product_id', $updateCartItemDTO->productId)
+                ->exists() ?? throw new ProductNotFoundException();
 
-        $productInCart = $cart->products()->where('product_id', $updateCartItemDTO->productId)->exists();
-
-        if (!$productInCart) {
-            throw new ProductNotFoundException();
-        }
         $cart->products()->updateExistingPivot(
             $updateCartItemDTO->productId,
             ['quantity' => $updateCartItemDTO->quantity]

@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class CartResource extends JsonResource
 {
 
-    public function toArray(Cart|Request $request): array
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,

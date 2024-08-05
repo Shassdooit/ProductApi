@@ -16,17 +16,13 @@ class RemoveItem
      */
     public function execute(int $userId, int $productId): void
     {
-        $cart = Cart::where('user_id', $userId)->first();
+        $cart = Cart::where('user_id', $userId)
+            ->first()
+            ?? throw new CartNotFoundException();
 
-
-        if ($cart !== null) {
-            if ($cart->products()->where('product_id', $productId)->exists()) {
-                $cart->products()->detach($productId);
-            } else {
-                throw new ProductNotFoundException();
-            }
-        } else {
-            throw new CartNotFoundException();
-        }
+        $cart->products()->where('product_id', $productId)
+            ->exists() ?? throw new ProductNotFoundException();
+        $cart->products()->detach($productId);
     }
+
 }
