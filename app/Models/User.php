@@ -3,9 +3,7 @@
 namespace App\Models;
 
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -13,10 +11,12 @@ use \Illuminate\Database\Eloquent\Relations\HasMany;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
+/**
+ * @method static create(array $array)
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
-    use SoftDeletes;
 
     protected $table = 'users';
 
@@ -30,7 +30,6 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
