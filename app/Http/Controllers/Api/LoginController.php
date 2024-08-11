@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -21,8 +22,8 @@ class LoginController extends Controller
 
         return response()->json([
             'success' => true,
-            'user' => auth()->guard('api')->user(),
-            'token' => $token
+            'user' => new UserResource(auth()->guard('api')->user()),
+            'token' => $token,
         ], 200);
     }
 }

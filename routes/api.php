@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,7 @@ Route::prefix('/v1')->group(function () {
     Route::post('/register', RegisterController::class)->name('register');
     Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('login');
     Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
+        return new UserResource($request->user());
     });
     Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
 });
