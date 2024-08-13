@@ -76,7 +76,6 @@ class CartController extends Controller
         }
     }
 
-
     /**
      * @throws Exception
      */

@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @method static where(string $string, int $cartId)
+ */
 class Cart extends Model
 {
     use HasFactory;
@@ -21,5 +25,10 @@ class Cart extends Model
         return $this->belongsToMany(Product::class, 'carts_products', 'cart_id', 'product_id')
             ->withPivot('quantity')
             ->withTimestamps();
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

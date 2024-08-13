@@ -10,8 +10,16 @@ class AddItem
     public function execute(StoreCartItemDTO $storeCartItemDTO): void
     {
         $cart = Cart::firstOrCreate(['user_id' => $storeCartItemDTO->userId]);
-        $cart->products()->syncWithoutDetaching([
-            $storeCartItemDTO->productId => ['quantity' => $storeCartItemDTO->quantity]
-        ]);
+
+        $existingProduct = $cart->products()
+            ->where('product_id', $storeCartItemDTO->productId)
+            ->first();
+
+        if ($existingProduct) {
+            $existingProduct->pivot->increment('quantity', $storeCartItemDTO->quantity);
+        } else {
+            $cart->products()
+                ->attach($storeCartItemDTO->productId, ['quantity' => $storeCartItemDTO->quantity]);
+        }
     }
 }

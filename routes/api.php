@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\OrderController;
@@ -16,7 +18,6 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('/v1')->group(function () {
     Route::apiResource('/products', ProductController::class);
-    Route::apiResource('/orders', OrderController::class);
     Route::apiResource('/users', UserController::class);
 
     Route::prefix('/carts')->group(function () {
@@ -26,12 +27,19 @@ Route::prefix('/v1')->group(function () {
         Route::delete('/{userId}/items/{cartItemId}', [CartController::class, 'destroy']);
     });
 
+
     Route::post('/register', RegisterController::class)->name('register');
-    Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('login');
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return new UserResource($request->user());
+    Route::post('/login', LoginController::class)->name('login');
+    Route::post('/logout', LogoutController::class)->name('logout');
+
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/create-order', [OrderController::class, 'createOrderFromCart']);
+        Route::get('/user', function (Request $request) {
+            return new UserResource($request->user());
+        });
+        Route::get('/orders', [OrderController::class, 'getUserOrders']);
+        Route::get('/orders/{orderId}', [OrderController::class, 'getOrder']);
     });
-    Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
 });
 
 
