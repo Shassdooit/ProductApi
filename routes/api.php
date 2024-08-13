@@ -27,6 +27,10 @@ Route::prefix('/v1')->group(function () {
         Route::delete('/{userId}/items/{cartItemId}', [CartController::class, 'destroy']);
     });
 
+    Route::prefix('/orders')->group(function () {
+        Route::get('/{userId}', [OrderController::class, 'index']);
+        Route::get('/{userId}/{orderId}', [OrderController::class, 'show']);
+    });
 
     Route::post('/register', RegisterController::class)->name('register');
     Route::post('/login', LoginController::class)->name('login');
