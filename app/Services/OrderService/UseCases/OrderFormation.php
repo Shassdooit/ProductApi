@@ -52,5 +52,4 @@ class OrderFormation
             throw $e;
         }
     }
-
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @method static where(string $string, int $cartId)
+ * @method static firstOrCreate(array $array)
  */
 class Cart extends Model
 {

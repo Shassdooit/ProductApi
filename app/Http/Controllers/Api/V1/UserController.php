@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return new UserResource(User::create($request->all()));
     }
 
     /**

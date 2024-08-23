@@ -7,6 +7,11 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $products
+ * @property mixed $user_id
+ * @property mixed $id
+ */
 class CartResource extends JsonResource
 {
 

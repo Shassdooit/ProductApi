@@ -18,10 +18,9 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'users';
-
     protected $fillable = [
         'name',
+        'role',
         'email',
         'password',
         'phone',
@@ -32,8 +31,6 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'remember_token',
     ];
-
-    // Rest omitted for brevity
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

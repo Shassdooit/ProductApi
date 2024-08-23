@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @method static create(mixed $validated)
+ * @method static findOrFail(string $id)
+ */
 class Product extends Model
 {
     use HasFactory;

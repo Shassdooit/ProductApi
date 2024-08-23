@@ -13,8 +13,6 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $table = 'orders';
-
     protected array $enumCasts = [
         'status' => OrderStatusEnum::class,
     ];

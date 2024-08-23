@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\DTO\Order\CreateOrderDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Services\OrderService\UseCases\OrderFormation;
@@ -47,18 +48,19 @@ class OrderController extends Controller
 
         $orders = $user->orders()->with('orderProducts.product')->get();
 
-        return response()->json(['orders' => $orders]);
+        return response()->json(OrderResource::collection($orders));
     }
 
-    public function getOrder(Order $order): JsonResponse
+    public function getOrder($orderId): JsonResponse
     {
+        $order = Order::findOrFail($orderId);
         $user = Auth::user();
 
         if ($order->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return response()->json(['order' => $order->load('orderProducts.product')]);
+        return response()->json(new OrderResource($order->load('orderProducts.product')));
     }
 
 }
