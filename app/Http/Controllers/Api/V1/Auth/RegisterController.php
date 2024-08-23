@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -13,7 +13,7 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'name' => $request->name,
-            'role' => $request->role,
+            'role' => $request->role ?? 'user',
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,

@@ -9,6 +9,9 @@ use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
+/**
+ * @method static findOrFail($orderId)
+ */
 class Order extends Model
 {
     use HasFactory;

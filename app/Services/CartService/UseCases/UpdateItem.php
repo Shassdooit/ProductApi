@@ -7,6 +7,7 @@ use App\Exceptions\CartNotFoundException;
 use App\Exceptions\ProductNotFoundException;
 use App\Models\Cart;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class UpdateItem
 {
@@ -16,15 +17,22 @@ class UpdateItem
     public function execute(UpdateCartItemDTO $updateCartItemDTO): void
     {
         $cart = Cart::where('user_id', $updateCartItemDTO->userId)
-            ->first() ?? throw new CartNotFoundException();
+            ->firstOrFail();
 
-        $cart->products()->where('product_id', $updateCartItemDTO->productId)
-                ->exists() ?? throw new ProductNotFoundException();
+        $productInCart = $cart->products()
+            ->where('product_id', $updateCartItemDTO->productId)
+            ->firstOrFail();
 
-        $cart->products()->updateExistingPivot(
-            $updateCartItemDTO->productId,
-            ['quantity' => $updateCartItemDTO->quantity]
-        );
+        $newQuantity = $productInCart->pivot->quantity + $updateCartItemDTO->quantity;
+
+        if ($newQuantity > 0) {
+            $cart->products()->updateExistingPivot(
+                $updateCartItemDTO->productId,
+                ['quantity' => $newQuantity]
+            );
+        } else {
+            $cart->products()->detach($updateCartItemDTO->productId);
+        }
     }
-
 }
+

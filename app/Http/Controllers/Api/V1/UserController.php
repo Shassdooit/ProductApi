@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\Rule;
 
+/**
+ * @method authorize(string $string, $user)
+ */
 class UserController extends Controller
 {
     /**
@@ -37,9 +43,20 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateUserRole(Request $request, $id): JsonResponse
     {
-        //
+        $user = User::findOrFail($id);
+        $this->authorize('updateRole', $user);
+
+        $validated = $request->validate([
+            'role' => ['required', Rule::in(UserRoleEnum::cases())],
+        ]);
+
+        $user->role = $validated['role'];
+        $user->save();
+
+        return response()
+            ->json(['message' => 'User role updated successfully', 'user' => new UserResource($user)]);
     }
 
     /**

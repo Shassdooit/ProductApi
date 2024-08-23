@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\DTO\Order\CreateOrderDTO;
+use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateOrderRequest;
+use App\Http\Requests\Order\CreateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Order;
@@ -15,6 +16,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
+/**
+ * @method validate(Request $request, string[] $array)
+ */
 class OrderController extends Controller
 {
     public function __construct(
@@ -63,4 +67,17 @@ class OrderController extends Controller
         return response()->json(new OrderResource($order->load('orderProducts.product')));
     }
 
+    public function updateOrderStatus(Request $request, $orderId): JsonResponse
+    {
+        $order = Order::findOrFail($orderId);
+
+        $validated = $request->validate([
+            'status' => 'required|string|in:unpaid,paid,preparing,on_the_way,delivered,cancelled',
+        ]);
+
+        $order->status = OrderStatusEnum::from($validated['status']);
+        $order->save();
+
+        return response()->json(['message' => 'Order status updated successfully', 'order' => $order]);
+    }
 }

@@ -17,6 +17,7 @@ use App\Services\CartService\UseCases\RemoveItem;
 use App\Services\CartService\UseCases\UpdateItem;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 
 class CartController extends Controller
@@ -29,8 +30,10 @@ class CartController extends Controller
     ) {
     }
 
-    public function index($userId): JsonResponse
+    public function index(): JsonResponse
     {
+        $userId = Auth::id();
+
         try {
             $items = $this->getAllItems->execute($userId);
             return response()->json(new CartResource($items));
@@ -41,10 +44,12 @@ class CartController extends Controller
 
     public function store(StoreCartItemRequest $request): JsonResponse
     {
+        $user = Auth::user();
+
         $validatedData = $request->validated();
 
         $dto = new StoreCartItemDTO(
-            $validatedData['user_id'],
+            $user->id,
             $validatedData['product_id'],
             $validatedData['quantity']
         );
@@ -57,14 +62,16 @@ class CartController extends Controller
     /**
      * @throws Exception
      */
-    public function update(UpdateCartItemRequest $request, int $userId, int $cartItemId): JsonResponse
+    public function update(UpdateCartItemRequest $request, int $productId): JsonResponse
     {
+        $user = Auth::user();
+
         try {
             $validatedData = $request->validated();
 
             $dto = new UpdateCartItemDTO(
-                $userId,
-                $cartItemId,
+                $user->id,
+                $productId,
                 $validatedData['quantity']
             );
 
@@ -76,16 +83,17 @@ class CartController extends Controller
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function destroy($userId, $productId): JsonResponse
+
+    public function destroy(int $productId): JsonResponse
     {
+        $user = Auth::user();
+
         try {
-            $this->removeItem->execute($userId, $productId);
+            $this->removeItem->execute($user->id, $productId);
             return response()->json(['message' => 'Item removed successfully'], 200);
         } catch (CartNotFoundException|ProductNotFoundException $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         }
     }
 }
+

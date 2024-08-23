@@ -17,8 +17,9 @@ class AddItem
 
         if ($existingProduct) {
             $existingProduct->pivot->increment('quantity', $storeCartItemDTO->quantity);
+        } else {
+            $cart->products()
+                ->attach($storeCartItemDTO->productId, ['quantity' => $storeCartItemDTO->quantity]);
         }
-        $cart->products()
-            ->attach($storeCartItemDTO->productId, ['quantity' => $storeCartItemDTO->quantity]);
     }
 }
