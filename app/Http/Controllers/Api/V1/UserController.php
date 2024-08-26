@@ -16,17 +16,12 @@ use Illuminate\Validation\Rule;
  */
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         return new UserResource(User::create($request->all()));

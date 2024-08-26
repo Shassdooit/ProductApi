@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
@@ -16,6 +17,7 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('products/{id}', [ProductController::class, 'show']);
     Route::post('register', RegisterController::class)->name('register');
     Route::post('login', LoginController::class)->name('login');
+    Route::post('refresh-token', [AuthController::class, 'refresh']);
 
     Route::middleware('auth:api')->group(function () {
         Route::prefix('carts')->group(function () {

@@ -10,7 +10,7 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (in_array($request->route()->getName(), ['login', 'register'])) {
+        if (in_array($request->route()->getName(), ['login', 'register', 'refresh'])) {
             return $next($request);
         }
 

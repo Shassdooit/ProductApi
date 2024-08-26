@@ -19,10 +19,19 @@ class LoginController extends Controller
                 'message' => 'Your e-mail address or password is incorrect'
             ], 401);
         }
+
+        $refreshToken = auth()
+            ->guard('api')
+            ->claims([
+                'exp' => now()->addDays(30)->timestamp
+            ])
+            ->attempt($credentials);
+
         return response()->json([
             'success' => true,
             'user' => new UserResource(auth()->guard('api')->user()),
             'token' => $token,
+            'refresh_token' => $refreshToken,
         ], 200);
     }
 }
