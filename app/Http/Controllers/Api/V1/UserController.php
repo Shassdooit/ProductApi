@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -17,6 +18,8 @@ use Illuminate\Validation\Rule;
  */
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
@@ -38,8 +41,13 @@ class UserController extends Controller
 
     public function updateUserRole(Request $request, $id): JsonResponse
     {
+        $adminUser = auth()->user();
+
+        if ($adminUser->role !== 'admin') {
+            return response()->json(['message' => 'This action is unauthorized.'], 403);
+        }
+
         $user = User::findOrFail($id);
-        $this->authorize('updateRole', $user);
 
         $validated = $request->validate([
             'role' => ['required', Rule::in(UserRoleEnum::cases())],
@@ -48,8 +56,10 @@ class UserController extends Controller
         $user->role = $validated['role'];
         $user->save();
 
-        return response()
-            ->json(['message' => 'User role updated successfully', 'user' => new UserResource($user)]);
+        return response()->json([
+            'message' => 'User role updated successfully',
+            'user' => new UserResource($user)
+        ]);
     }
 
     public function destroy(string $id): JsonResponse
