@@ -10,7 +10,6 @@ use Exception;
 
 class RemoveItem
 {
-
     /**
      * @throws Exception
      */
@@ -24,5 +23,4 @@ class RemoveItem
             ->exists() ?? throw new ProductNotFoundException();
         $cart->products()->detach($productId);
     }
-
 }

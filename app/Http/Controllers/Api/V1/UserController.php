@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -21,23 +22,20 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
-
-    public function store(Request $request)
+    public function store(StoreUserRequest $request): UserResource
     {
-        return new UserResource(User::create($request->all()));
+        $validatedData = $request->validated();
+        $validatedData['password'] = bcrypt($validatedData['password']);
+        $user = User::create($validatedData);
+
+        return new UserResource($user);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id): UserResource
     {
         return new UserResource(User::findOrFail($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function updateUserRole(Request $request, $id): JsonResponse
     {
         $user = User::findOrFail($id);
@@ -54,11 +52,11 @@ class UserController extends Controller
             ->json(['message' => 'User role updated successfully', 'user' => new UserResource($user)]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully'], 200);
     }
 }

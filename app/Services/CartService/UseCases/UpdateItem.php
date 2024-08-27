@@ -3,11 +3,8 @@
 namespace App\Services\CartService\UseCases;
 
 use App\DTO\Cart\UpdateCartItemDTO;
-use App\Exceptions\CartNotFoundException;
-use App\Exceptions\ProductNotFoundException;
 use App\Models\Cart;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class UpdateItem
 {

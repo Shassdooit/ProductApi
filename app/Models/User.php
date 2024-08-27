@@ -10,7 +10,6 @@ use Illuminate\Notifications\Notifiable;
 use \Illuminate\Database\Eloquent\Relations\HasMany;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
 /**
  * @method static create(array $array)
  */
@@ -28,6 +27,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $hidden = [
+        'password',
         'remember_token',
     ];
 

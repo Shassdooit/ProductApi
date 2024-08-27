@@ -83,7 +83,6 @@ class CartController extends Controller
         }
     }
 
-
     public function destroy(int $productId): JsonResponse
     {
         $user = Auth::user();

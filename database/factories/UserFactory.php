@@ -2,21 +2,15 @@
 
 namespace Database\Factories;
 
-
 use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 
 /**
  * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
-
-    protected static ?string $password;
-
-
     public function definition(): array
     {
         return [
@@ -28,7 +22,6 @@ class UserFactory extends Factory
             'password' => fake()->password(),
         ];
     }
-
 
     public function unverified(): static
     {

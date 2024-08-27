@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
+
     Route::post('register', RegisterController::class)->name('register');
     Route::post('login', LoginController::class)->name('login');
     Route::post('refresh-token', [AuthController::class, 'refresh']);
@@ -37,7 +38,8 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         Route::get('/orders/{orderId}', [OrderController::class, 'getOrder']);
 
         Route::middleware(['role:admin,moderator'])->group(function () {
-            Route::apiResource('products', ProductController::class)->except(['index', 'show']);
+            Route::apiResource('products', ProductController::class)
+                ->except(['index', 'show']);
             Route::put('orders/{orderId}/status', [OrderController::class, 'updateOrderStatus']);
         });
 

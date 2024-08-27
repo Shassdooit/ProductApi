@@ -12,9 +12,8 @@ use Ramsey\Uuid\Type\Integer;
 
 class UserSeeder extends Seeder
 {
-
-//    public function run(): void
-//    {
+    public function run(): void
+    {
 //        User::factory(100)->create();
-//    }
+    }
 }

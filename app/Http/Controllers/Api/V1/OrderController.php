@@ -15,10 +15,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
-/**
- * @method validate(Request $request, string[] $array)
- */
 class OrderController extends Controller
 {
     public function __construct(

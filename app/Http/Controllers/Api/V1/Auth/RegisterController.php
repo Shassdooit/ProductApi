@@ -11,13 +11,15 @@ class RegisterController extends Controller
 {
     public function __invoke(RegisterRequest $request): JsonResponse
     {
+        $validatedData = $request->validated();
+
         $user = User::create([
-            'name' => $request->name,
-            'role' => $request->role ?? 'user',
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'password' => bcrypt($request->password)
+            'name' => $validatedData['name'],
+            'role' => $validatedData['role'] ?? 'user',
+            'email' => $validatedData['email'],
+            'phone' => $validatedData['phone'],
+            'address' => $validatedData['address'],
+            'password' => bcrypt($validatedData['password']),
         ]);
 
         if ($user) {

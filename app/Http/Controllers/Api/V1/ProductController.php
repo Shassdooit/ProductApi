@@ -10,7 +10,6 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-
 class ProductController extends Controller
 {
     public function index(): AnonymousResourceCollection
@@ -18,9 +17,6 @@ class ProductController extends Controller
         return ProductResource::collection(Product::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProductRequest $request): ProductResource
     {
         $createdProduct = Product::create($request->validated());
@@ -28,26 +24,17 @@ class ProductController extends Controller
         return new ProductResource($createdProduct);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id): ProductResource
     {
         return new ProductResource(Product::findOrFail($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProductRequest $request, Product $product): ProductResource
     {
         $product->update($request->all());
         return new ProductResource($product);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product): JsonResponse
     {
         $product->delete();

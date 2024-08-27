@@ -33,5 +33,4 @@ class Product extends Model
             ->withPivot('quantity')
             ->withTimestamps();
     }
-
 }
