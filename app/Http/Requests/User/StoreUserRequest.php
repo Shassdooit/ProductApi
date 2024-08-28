@@ -9,7 +9,6 @@ class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Разрешаем только администраторам создавать пользователей
         return $this->user()->role === 'admin';
     }
 
